@@ -3,25 +3,16 @@ from bs4 import BeautifulSoup
 
 def scrape_event(url):
     response = requests.get(url)
+    if response.status_code != 200:
+        raise Exception(f"Request failed with status code {response.status_code}")
+
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    status_div = soup.find("div", class_="c-hero__headline-suptitle")
-    status = status_div.text.strip() if status_div else "Status niet gevonden"
-
-    card_segments = []
-    for segment in soup.find_all("div", class_="c-card-event--time-location"):
-        time = segment.find("div", class_="c-card-event--time")
-        if time:
-            card_segments.append(time.text.strip())
-
-    fights = []
-    for fight in soup.find_all("div", class_="c-card-fight--content"):
-        names = fight.find_all("h3", class_="c-card-fight__title")
-        for name in names:
-            fights.append(name.text.strip())
+    # Zoek de status, bijvoorbeeld "Final", "Upcoming", etc.
+    status_element = soup.find('div', class_='c-hero__headline-suffix')
+    status = status_element.get_text(strip=True) if status_element else "Status not found"
 
     return {
-        "status": status,
-        "start_times": card_segments,
-        "fights": fights
+        "event_url": url,
+        "status": status
     }
