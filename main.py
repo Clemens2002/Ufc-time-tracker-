@@ -1,4 +1,4 @@
-// main.py
+# main.py
 
 from flask import Flask, request, jsonify
 from src.ufc_scraper import scrape_event
