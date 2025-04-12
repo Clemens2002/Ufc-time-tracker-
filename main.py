@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import os
-from src.ufc_scraper.scraper import scrape_event
+from src.ufc_scraper import scrape_event
 
 app = Flask(__name__)
 
